@@ -1,0 +1,21 @@
+{
+    "name": "scisint/pcr",
+    "description": "for pcr test result",
+    "type": "library",
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "Scisint\\PCR\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "wangxin",
+            "email": "wangxin@scisint.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
