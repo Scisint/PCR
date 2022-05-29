@@ -3,7 +3,7 @@
 namespace Scisint\PCR;
 
 // 为SLAN PCR仪核酸检测结果制作
-// version 1.0.0
+// version 1.0.1
 // update 2022-05-29 14:30
 class Pcr
 {
