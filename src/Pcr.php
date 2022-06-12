@@ -3,8 +3,8 @@
 namespace Scisint\PCR;
 
 // 为SLAN PCR仪核酸检测结果制作
-// version 1.0.1
-// update 2022-05-29 14:30
+// version 1.0.2
+// update 2022-06-12 17:30
 class Pcr
 {
     public const RULE_NOT_FIND        = '未知结果';
@@ -33,7 +33,7 @@ class Pcr
             'range'=>[
                 'ORF1ab' => [39.5,10],
                 'N'      => [39.5,10],
-                'IC'     => [35],
+                'IC'     => [38],
             ],
             'data'=>[
                 'NOCT_NOCT_NOCT' => ['result' => self::RULE_NOCT,'is_positive' => self::IS_UNKNOWN],

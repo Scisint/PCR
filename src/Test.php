@@ -9,7 +9,7 @@ A12	ORF1ab	35.15
 A12	N 	38.03
 A12	IC	25.06
 */
-var_dump(Pcr::check(35.15,38.03,25.06));
+var_dump(Pcr::check('36.39','36.81','26.10'));
 
 /*
 F6	ORF1ab	NoCt
