@@ -1,6 +1,6 @@
 Scisint PCR
 =======
-ver 1.0.1
+ver 1.0.2
 
 专门用来PCR检测仪结果判定
 
