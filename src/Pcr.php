@@ -3,8 +3,8 @@
 namespace Scisint\PCR;
 
 // 为SLAN PCR仪核酸检测结果制作
-// version 1.0.2
-// update 2022-06-12 17:30
+// version 1.1.0
+// update 2022-06-13 17:30
 class Pcr
 {
     public const RULE_NOT_FIND        = '未知结果';
@@ -25,6 +25,8 @@ class Pcr
     public const ORF1AB               = 'ORF1ab';
     public const N                    = 'N';
     public const IC                   = 'IC';
+    public const TYPE_WARNING         = 1;
+    public const TYPE_WARNING_DEFAULT = 0;
 
     // 将规则表定义为类常量，可以在后期传入自己的规则集
     // 规则列表,格式是[ruleset_id=>['rule_code'=>['result_text'=>'阳性/阴性','is_postive'=>1/0,]
@@ -34,6 +36,11 @@ class Pcr
                 'ORF1ab' => [39.5,10],
                 'N'      => [39.5,10],
                 'IC'     => [38],
+            ],
+            'type_warning_list'=>['临界阳性对照','阴性对照','临界阴性对照','阳性对照'],
+            'type_warning_rang' =>[
+                'ORF1ab' => [37,29],
+                'N'      => [37,29],
             ],
             'data'=>[
                 'NOCT_NOCT_NOCT' => ['result' => self::RULE_NOCT,'is_positive' => self::IS_UNKNOWN],
@@ -74,7 +81,7 @@ class Pcr
     ];
 
     // 使用静态方法来调用
-    public static function check($ORF1ab='', $N='', $IC='', $ruleset='BS_1')
+    public static function check($ORF1ab='', $N='', $IC='', $type='', $ruleset='BS_1')
     {
         //组合相应的编号形成rulecode，在规则列表中查找相应的结果
         $ORF1ab = strtoupper(trim($ORF1ab));
@@ -143,10 +150,11 @@ class Pcr
         }
 
         $ret_default=[
-            'rule_code'   => $rule_code,
-            'result'      => self::RULE_NOT_FIND,
-            'is_positive' => self::IS_UNKNOWN,
-            'state'       => self::UNKNOWN,
+            'rule_code'    => $rule_code,
+            'result'       => self::RULE_NOT_FIND,
+            'is_positive'  => self::IS_UNKNOWN,
+            'state'        => self::UNKNOWN,
+            'type_warning' => self::TYPE_WARNING_DEFAULT,
         ];
         $find_result = self::$rule[$ruleset]['data'][$rule_code]??$ret_default;
         $state       = self::UNKNOWN;
@@ -163,6 +171,25 @@ class Pcr
         }
         $find_result['state']     = $state;
         $find_result['rule_code'] = $rule_code;
+
+        // 加入对类型的判断
+        $type_warning = self::TYPE_WARNING_DEFAULT;
+        if (!empty($type)) {
+            if (in_array($type, self::$rule[$ruleset]['type_warning_list'])) {
+                $ORF_val = floatval($ORF1ab);
+                $N_val = floatval($N);
+                if ($ORF_val>self::$rule[$ruleset]['type_warning_rang'][self::ORF1AB][0]) {
+                    $type_warning = self::TYPE_WARNING;
+                } elseif ($ORF_val<self::$rule[$ruleset]['type_warning_rang'][self::ORF1AB][1]) {
+                    $type_warning = self::TYPE_WARNING;
+                } elseif ($N_val>self::$rule[$ruleset]['type_warning_rang'][self::N][0]) {
+                    $type_warning = self::TYPE_WARNING;
+                } elseif ($N_val<self::$rule[$ruleset]['type_warning_rang'][self::N][1]) {
+                    $type_warning = self::TYPE_WARNING;
+                }
+            }
+        }
+        $find_result['type_warning'] = $type_warning;
 
         return $find_result;
     }

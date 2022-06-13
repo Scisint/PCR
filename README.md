@@ -1,6 +1,6 @@
 Scisint PCR
 =======
-ver 1.0.2
+ver 1.1.0
 
 专门用来PCR检测仪结果判定
 
@@ -19,18 +19,20 @@ composer require scisint/pcr
 注意参数的顺序为: ORF1ab值、N值、IC值
 ```php
 <?php
-Pcr::check('ORF1ab','N','IC');
+Pcr::check('ORF1ab','N','IC','对照');
 //返回结果
 /*
 array(4) {
-  ["result"]=>
-  string(6) "阴性"
-  ["is_positive"]=>
-  int(0)
-  ["state"]=>
-  string(8) "negative"
-  ["rule_code"]=>
-  string(5) "0_0_1"
+    ["result"]=>
+    string(6) "阳性"
+    ["is_positive"]=>
+    int(1)
+    ["state"]=>
+    string(8) "positive"
+    ["rule_code"]=>
+    string(5) "1_1_1"
+    ["type_warning"]=>
+    int(0)
 }
 */
 
@@ -41,6 +43,7 @@ result：结果
 is_positive: 是否阳性，可能值为 1(是)，0(否)，-1(未知)
 state: 判断阴阳性英文描述，可能值为 positive,negative,unknown
 rule_code: 规则编号，可用来检查结果
+type_warning: 根据类型返回的警告级别
 
 常量值
 -----
@@ -64,7 +67,8 @@ Pcr::BLANK                = '';
 Pcr::ORF1AB               = 'ORF1ab';
 Pcr::N                    = 'N';
 Pcr::IC                   = 'IC';
-
+Pcr::TYPE_WARNING         = 1;
+Pcr::TYPE_WARNING_DEFAULT = 0;
 ```
 
 使用举例：
